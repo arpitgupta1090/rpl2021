@@ -411,6 +411,7 @@ def changePassowrd(request):
 			form = PassForm()
 			return render(request, 'updatepassword.html', {'form': form})
 		else:
+
 			messages.info(request, 'Invalid Session')
 			return redirect('home')
 
