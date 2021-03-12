@@ -9,10 +9,3 @@ class Migration(migrations.Migration):
         ('rpl31', '0002_otptabl'),
     ]
 
-    operations = [
-        migrations.AddField(
-            model_name='selected',
-            name='seriesId',
-            field=models.IntegerField(default=0),
-        ),
-    ]
