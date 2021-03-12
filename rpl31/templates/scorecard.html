@@ -1,0 +1,89 @@
+{% load static %}
+
+<html>
+
+<head>
+	 <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{%static 'css/w3.css' %}">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+<style>
+html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+</style>
+
+<script>
+function validateForm() {
+  var x = document.forms["myForm"]["matchid"].value;
+  if (x == "" || x == null) {
+    alert("Select an option from dropdown");
+    return false;
+  }
+}
+</script>
+
+<title>Score Card</title>
+
+</head>
+
+<body class="w3-light-grey">
+
+
+<div class="w3-display-topleft w3-container w3-large">
+	<form name="myForm" onsubmit="return validateForm()" method="post">
+	{%csrf_token%}
+ <div class="container">
+	{{form.as_p}}
+	<button type="submit" >Fetch Score </button>
+	</form>
+ </div>	
+
+
+<table class="w3-table w3-bordered w3-border w3-table-red ">
+
+<tr  style="background-color: black;">
+<td><b>User name</b></td>
+<td><b>1st batsman</b></td>
+<td><b>score</b></td>
+<td><b>2nd batsman</b></td>
+<td><b>score</b></td>
+<td><b>1st Bowler</b></td>
+<td><b>score</b></td>
+<td><b>2nd Bowler</b></td>
+<td><b>score</b></td>
+<td><b>All Rounder</b></td>
+<td><b>score</b></td>
+<td><b>Total Score</b></td>
+<td><b>Points</b></td>
+</tr>
+
+
+
+{% for i in data %}
+<tr class="w3-table-red">
+<td>{{ i.user }}</td>
+<td>{{ i.bat1name }}</td>
+<td>{{ i.bat1score }}</td>
+<td>{{ i.bat2name }}</td>
+<td>{{ i.bat2score }}</td>
+<td>{{ i.bowl1name }}</td>
+<td>{{ i.bowl1score }}</td>
+<td>{{ i.bowl2name }}</td>
+<td>{{ i.bowl2score }}</td>
+<td>{{ i.allname }}</td>
+<td>{{ i.allscore }}</td>
+<td>{{ i.total }}</td>
+<td>{{ i.point }}</td>
+</tr>
+{% endfor %}
+</table>
+	
+
+   
+</body>
+
+</html>

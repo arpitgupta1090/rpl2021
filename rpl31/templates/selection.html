@@ -1,0 +1,32 @@
+{% load static %}
+<html>
+<title>Selection</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{%static 'css/w3.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+</style>
+<body class="w3-light-grey">
+
+
+  <div class="w3-container">
+    <h5>Your selected players</h5>
+    <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
+	  {% for i in selectdata %}
+      <tr>
+        <td>{{i.match}}</td>
+        <td>{{i.p1}}</td>
+		<td>{{i.p2}}</td>
+		<td>{{i.p3}}</td>
+		<td>{{i.p4}}</td>
+		<td>{{i.p5}}</td>
+      </tr>
+	  {% endfor %}
+    </table>
+  </div>
+
+</body>
+</html>

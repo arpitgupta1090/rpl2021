@@ -1,0 +1,187 @@
+{% load static %}
+<html>
+<title>My profile</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="{%static 'css/w3.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+</style>
+<body class="w3-light-grey">
+
+<!-- Top container -->
+<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+  <span class="w3-bar-item w3-middle">{{series}}</span>
+  
+</div>
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+  <div class="w3-container w3-row">
+    <div class="w3-col s4">
+      <img src="{{userset.UserImg.url}}" class="w3-circle w3-margin-right" style="width:86px">
+    </div>
+	 <div class="w3-col s8 w3-bar">
+      <h2>Hi, <strong>{{name}}</strong></h2><br>
+	 </div>
+	  <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+  </div>
+  <hr>
+  <div class="w3-container">
+    <h5><strong>User Service</strong></h5>
+  </div>
+  <div class="w3-bar-block">
+    
+    <a href="updateprofile" target="_blank" class="w3-bar-item w3-button w3-padding"><i class="fa fa-edit fa-fw"></i> Update profile</a>
+    <a href="changepassowrd" target="_blank" class="w3-bar-item w3-button w3-padding"><i class="fa fa-lock fa-fw"></i>  Change password</a>
+    <!--a href="uploadphoto" target="_blank" class="w3-bar-item w3-button w3-padding"><i class="fa fa-photo fa-fw"></i>  Upload photo</a-->
+    <a href="logout" class="w3-bar-item w3-button w3-padding"><i class="fa fa-sign-out fa-fw"></i>  Logout</a>
+	<br><br>
+  </div>
+</nav>
+
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+
+  <!-- Header -->
+  <header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fa fa-dashboard"></i> My Dashboard</b></h5>
+  </header>
+
+  <div class="w3-row-padding w3-margin-bottom">
+    <div class="w3-quarter">
+      <div class="w3-container w3-red w3-padding-16">
+        <div class="w3-left"><i class="fa fa-thumbs-o-up w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3>{{score}}</h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Score</h4>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-blue w3-padding-16">
+        <div class="w3-left"><i class="fa fa-diamond w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3>{{point}}</h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Points</h4>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-teal w3-padding-16">
+        <div class="w3-left"><i class="fa fa-rupee w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3>{{amount}}</h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Amount</h4>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-dark-grey w3-text-white w3-padding-16">
+        <div class="w3-left"><i class="fa fa-trophy w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3>{{rank}}</h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Rank</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="w3-panel">
+    <div class="w3-row-padding" style="margin:0 -16px">
+      <div class="w3-third">
+        <h5>Leading</h5>
+        <img src="{{photo.UserImg.url}}" style="width:100%;height: 50%;" alt="Winners photo NA">
+      </div>
+      <div class="w3-twothird">
+        <h5>Leader Board</h5>
+        <table class="w3-table w3-striped w3-white">
+		{% for i in leaddata %}
+          <tr>
+            <td><i class="fa fa-star w3-text-orange w3-large"></i></td>
+            <td>{{i.userName}}</td>
+            <td><i>{{i.points}}</i></td>
+          </tr>
+		  {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <hr>
+
+  <div class="w3-container">
+    <h5>Your Recent Selection</h5>
+    <table class="w3-table w3-striped w3-bordered w3-border w3-hoverable w3-white">
+	  {% for i in selectdata %}
+      <tr>
+        <td>{{i.match}}</td>
+        <td>{{i.p1}}</td>
+		<td>{{i.p2}}</td>
+		<td>{{i.p3}}</td>
+		<td>{{i.p4}}</td>
+		<td>{{i.p5}}</td>
+      </tr>
+	  {% endfor %}
+    </table><br>
+    <a href="selection" target="_blank"><button class="w3-button w3-dark-grey">See more <i class="fa fa-arrow-right"></i></button></a>
+  </div>
+  <hr>
+  <div class="w3-container">
+    <h5>Recent Winners</h5>
+    <ul class="w3-ul w3-card-4 w3-white">
+	{% for i in windata %}
+      <li class="w3-padding-16">
+        <img src="{{i.photoname.UserImg.url}}" class="w3-left w3-circle w3-margin-right" style="width:35px">
+        <span class="w3-xlarge">{{i.winname}}</span><br>
+		<span class="w3-large">{{i.winmatch}}</span>&nbsp &nbsp<span class="w3-large">{{i.winscore}}</span>
+      </li>
+	{% endfor %}
+    </ul><br>
+	<a href="winners" target="_blank"><button class="w3-button w3-dark-grey">See All <i class="fa fa-arrow-right"></i></button></a>
+  </div>
+  <hr>
+  
+  <br>
+
+  <!-- End page content -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+  if (mySidebar.style.display === 'block') {
+    mySidebar.style.display = 'none';
+    overlayBg.style.display = "none";
+  } else {
+    mySidebar.style.display = 'block';
+    overlayBg.style.display = "block";
+  }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+  mySidebar.style.display = "none";
+  overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

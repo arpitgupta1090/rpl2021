@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+	 <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Accounts Register</title>
+</head>
+
+<body bgcolor="cyan">
+<h1>Account Register</h1>
+
+
+<form action="register" method="post">
+	{% csrf_token %}
+
+	<input type="text" name="First_name" placeholder="First name"><br>
+	<input type="text" name="Last_name" placeholder="Last name"><br>
+	<input type="email" name="Email" placeholder="Email Id"><br>
+	<input type="text" name="Username" placeholder="User name"><br>
+	<input type="password" name="password1" placeholder="Password"><br>
+	<input type="password" name="password2" placeholder="Confirm Password"><br><br>
+	
+	<input type="submit">
+	
+	
+</form>
+	
+	<div>
+	
+	{% for message in messages%}
+	<h3>{{message}}</h3>
+	{% endfor %}
+	</div>
+</body>
+
+</html>

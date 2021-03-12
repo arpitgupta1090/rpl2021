@@ -1,0 +1,41 @@
+{% load static %}
+
+<html>
+
+<head>
+
+	 <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{%static 'css/w3.css' %}">
+	<link rel="stylesheet" href="{%static 'css/w5.css' %}">
+	<title>Change Password</title>
+</head>
+
+<body class="w3-light-grey">
+
+<div class="w3-display-topleft w3-xlarge w3-text-red">
+ {% for message in messages%}
+ <h3>{{message}}</h3>
+ {% endfor %}
+</div>
+<br><br>
+
+<div class="w3-display-topleft w3-container w3-xlarge">
+	<form method="post" enctype="multipart/form-data">
+	{%csrf_token%}
+	<br>
+ <div class="container">
+		{{form.as_p}}
+ </div>
+	<br>
+	<button type="submit" >Get OTP </button>
+	<button type="submit" >Submit </button>
+	</form>
+</div>
+
+</body>
+
+</html>
