@@ -50,7 +50,8 @@ def register(request):
 		messages.info(request, msg)
 
 	except Exception as e:
-		messages.info(request, e)
+
+		messages.info(request, str(e))
 		
 	return redirect('home')	
 
@@ -343,7 +344,9 @@ def uploadPhoto(request):
 		instance = RplUsers.objects.get(UserName=username)
 		form = UploadForm(request.POST, request.FILES, instance=instance)
 		if form.is_valid():
-			form.save()
+			uploaded_img = form.save(commit=False)
+			uploaded_img.image_data = form.cleaned_data['image'].file.read()
+			uploaded_img.save()
 			messages.info(request, 'Photo successfully uploaded')
 		else:
 			form = UploadForm()

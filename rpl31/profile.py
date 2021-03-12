@@ -4,6 +4,7 @@ from django.db.models import Max, Sum
 from natsort import natsorted
 from .config import Envariable
 from .formatdata import getSeries
+from base64 import b64encode
 
 
 def getProfile(username):
@@ -26,6 +27,7 @@ def getProfile(username):
 	win_dict = getWin(match_id_list, match_desc_list, no_of_win_dict)
 
 	dict1 = {**user_dict, **lead_dict, **select_dict, **win_dict}
+	# print(dict1)
 	return dict1
 	
 
@@ -40,6 +42,7 @@ def getUser(username, sid):
 
 	series = 'Indian Premier League'
 	user_set = RplUsers.objects.get(UserName=username)
+	encoded = b64encode(user_set.image_data).decode('ascii')
 	
 	results = Selected.objects.filter(userName=username).filter(seriesId=sid).aggregate(Sum('point'), Sum('total'))
 	score = results['total__sum']
@@ -60,11 +63,12 @@ def getUser(username, sid):
 	all_rec = Selected.objects.filter(seriesId=sid).values('userName').annotate(points=Sum('point')).order_by('-points')
 	sort_list = sorted(all_rec, key=lambda i: i['points'], reverse=True)
 
-	photo = []
+	# photo_set = []
 
 	if sort_list:
 		winner = sort_list[0].get('userName')
-		photo = RplUsers.objects.get(UserName=winner)
+		photo_set = RplUsers.objects.get(UserName=winner)
+		photo = b64encode(photo_set.image_data).decode('ascii')
 		
 	rank = 0
 	for user in sort_list:
@@ -72,6 +76,7 @@ def getUser(username, sid):
 		if user.get('userName') == name:
 			break
 	dict1['name'] = name
+	dict1['image'] = encoded
 	dict1['series'] = series
 	dict1['score'] = score
 	dict1['point'] = point
@@ -116,7 +121,8 @@ def getWin(match_id_list, match_desc_list, counter=None):
 			score = all_rec1[0].total
 			match_desc = match_desc_list[match_id_list.index(str(all_rec1[0].matchId))]
 			photo_name = RplUsers.objects.get(UserName=username)
-			lst.append({'winname': username, 'photoname': photo_name, 'winmatch': match_desc, 'winscore': score})
+			photo = b64encode(photo_name.image_data).decode('ascii')
+			lst.append({'winname': username, 'photoname': photo, 'winmatch': match_desc, 'winscore': score})
 
 	sort_list = natsorted(lst, key=lambda i: i.get('winmatch'), reverse=True)[:counter]
 	return {'windata': sort_list}

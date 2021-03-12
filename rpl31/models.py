@@ -1,5 +1,4 @@
 from django.db import models
-from PIL import Image
 from django.core.validators import MaxValueValidator
 
 
@@ -8,21 +7,12 @@ class RplUsers(models.Model):
 	emailId = models.EmailField(unique=True)
 	mobile = models.BigIntegerField(unique=True, validators=[MaxValueValidator(9999999999)])
 	activeflag = models.BooleanField(default=False)
-	pwd = models.CharField(max_length=1000)	
-	UserImg = models.ImageField(upload_to='images/', null=True, blank=True, default='images/default.jpg')
+	pwd = models.CharField(max_length=1000)
+	image = models.FileField(null=True, editable=True, default='default.jpg')
+	image_data = models.BinaryField(null=True, default=b'\x08')
 	
 	def __str__(self): 
 		return self.UserName
-	
-	def save(self):
-		super().save()  # saving image first
-
-		img = Image.open(self.UserImg.path)  # Open image using self
-
-		if img.height > 300 or img.width > 300:
-			new_img = (300, 300)
-			img.thumbnail(new_img)
-			img.save(self.UserImg.path)  # saving image at the same path
 
 
 class PlayerList(models.Model):

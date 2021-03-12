@@ -63,9 +63,8 @@ class ScoreForm(forms.Form):
 class UploadForm(forms.ModelForm):
 	class Meta: 
 		model = RplUsers
-		fields = ['UserImg']
-		labels = {'UserImg': '', }
-		
+		fields = ['image']
+
 		
 class UpdateForm(forms.ModelForm): 
 	class Meta: 
