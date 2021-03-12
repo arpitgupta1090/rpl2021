@@ -64,6 +64,7 @@ def getUser(username, sid):
 	sort_list = sorted(all_rec, key=lambda i: i['points'], reverse=True)
 
 	# photo_set = []
+	photo = ""
 
 	if sort_list:
 		winner = sort_list[0].get('userName')
