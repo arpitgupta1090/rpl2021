@@ -130,7 +130,6 @@ def getLiveMatch(match_id_list):
         if match_status in select1status:
             # team = m.squads
             team = sorted(m.squads, key=lambda i: i['player_name'])
-            print(team)
             for player in team:
                 team_list.append((player.get("player_id"), player.get("player_name")))
             break

@@ -1,5 +1,4 @@
 from django import forms
-from django.utils.translation import gettext_lazy as _
 from .models import RplUsers
 from .config import Envariable
 from .formatdata import getSeries
@@ -42,7 +41,7 @@ class SelectForm(forms.Form):
 		self.fields['player5'].choices = plist
 
 	matchid = forms.DecimalField(widget=forms.HiddenInput())
-	matchdesc = forms.CharField(label='Match', disabled=True, widget=forms.Textarea(attrs={'cols': 40, 'rows': 2}))
+	matchdesc = forms.CharField(label='Match', disabled=True, widget=forms.Textarea(attrs={'cols': 40, 'rows': 3}))
 	player1 = forms.ChoiceField(label='Select 1st Batsman')
 	player2 = forms.ChoiceField(label='Select 2nd Batsman')
 	player3 = forms.ChoiceField(label='Select 1st Bowler')
@@ -70,7 +69,7 @@ class UpdateForm(forms.ModelForm):
 	class Meta: 
 		model = RplUsers
 		fields = ('emailId', 'mobile')
-		help_texts = {'emailId': _('xxx@yyy.zz'), 'mobile': _('10 digit number')}
+		labels = {'emailId': 'Enter your Email-Id', }
 
 
 class PassForm(forms.ModelForm):

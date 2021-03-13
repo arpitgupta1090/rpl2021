@@ -1,0 +1,53 @@
+{% load static %}
+
+<html>
+
+<head>
+
+	 <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{%static 'css/w3.css' %}">
+	<link rel="stylesheet" href="{%static 'css/w5.css' %}">
+	<title>Select Player Live</title>
+	
+<script>
+function validateForm() {
+  var x = document.forms["myForm"]["player1"].value;
+  if (x == "" || x == null) {
+    alert("Select an option from dropdown");
+    return false;
+  }
+}
+</script>
+
+</head>
+
+<body class="w3-light-grey">
+
+<div class="w3-display-topleft w3-container w3-large">
+
+    <div class="w3-large w3-text-red">
+        {% for message in messages%}
+        <h3>{{message}}</h3>
+        {% endfor %}
+    </div>
+	
+	<form name="myForm" onsubmit="return validateForm()" method="post">
+	{%csrf_token%}
+	<br>
+ <div class="container"  style="width: 100%;">
+		{{form.as_p}}
+ </div>
+	<br>
+	<button type="submit" >Submit </button>
+	</form>
+	<a href="login"><button>Go Back</button></a>
+</div>
+
+
+</body>
+
+</html>
