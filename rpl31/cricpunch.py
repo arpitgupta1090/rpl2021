@@ -9,17 +9,18 @@ class Series:
     def __init__(self, _series_id=None):
         self._series_url = "https://www.espncricinfo.com/ci/content/match/fixtures_futures.html"
         self._series_id = _series_id
+
         if not _series_id:
             self.all_series = self._get_series(self._series_url)
         else:
             self._json_url = "http://core.espnuk.org/v2/sports/cricket/leagues/{0}/".format(str(_series_id))
             self._json = self._get_json(self._json_url)
+
             if self._json:
                 self._squad_url = self._squad_url()
                 self._squad_url_fix = "https://www.espncricinfo.com/ci/content/squad/index.html?object={0}" \
                     .format(str(self._series_id))
                 self.name = {"name": self._json['name']}
-    #            self.abbreviation = self.json['abbreviation']
                 self._url = self._json['links'][0]['href']
                 self._fix_url = self._fix_url()
                 self.matches = self._get_matches()
@@ -32,6 +33,7 @@ class Series:
     @staticmethod
     def _get_json(_url):
         r = requests.get(_url)
+
         if r.status_code == 404:
             print("URL not found")
         else:
@@ -39,23 +41,29 @@ class Series:
 
     @staticmethod
     def _get_series(_url):
+
         lst = []
         print("Please fetch series-id from below urls")
         r = requests.get(_url)
+
         if r.status_code == 200:
             soup = BeautifulSoup(r.text, 'html.parser')
             table = soup.find('div', attrs={'class': 'fixfutures'})
+
             for row in table.find_all('li'):
                 lst.append(row.a['href'])
-            return lst
+
         else:
-            return "Series data NA"
+            print("Series data NA")
+        return lst
 
     def _get_matches(self):
 
         r = requests.get(self._fix_url)
+        match = []
+
         if r.status_code == 200:
-            match = []
+
             soup = BeautifulSoup(r.text, 'html.parser')
             # text = soup.find_all('script')[15].contents[0].split('window.__INITIAL_STATE__ = ',1)[1]
             text2 = str(soup.findAll(text=re.compile('apiUrls'))[0]).split('"apiUrls":{"urls":')[1].split('}', 1)[0]
@@ -74,9 +82,10 @@ class Series:
                 match.append({"match_id": mid, "match_desc": match_desc,
                               "state": match_status, "team1": team1, "team2": team2})
 
-            return match
         else:
-            return "match data NA "
+            print("Match data NA at CrinInfo")
+
+        return match
 
     def _fix_url(self):
         url = ""
@@ -238,11 +247,15 @@ class Match:
                 for players in lst:
                     player = players.get("player")
                     lst2.append({"player_id": player.get("objectId"), "player_name": player.get("longName")})
-                return lst2
+
             else:
-                return "player list NA"
+                lst2 = []
+                print("player list NA at CricInfo")
         else:
-            return "player list NA"
+            lst2 = []
+            print("player list NA at CricInfo")
+
+        return lst2
 
     def _match_score(self):
         bat_list = []
@@ -255,7 +268,7 @@ class Match:
         tag_data = soup.find('script', text=re.compile('props'))
         text = tag_data.contents[0]
         data1 = json.loads(text)
-        url2 = data1["props"]["pageProps"]["seo"]["canonical"].replace('/game/', '/scorecard/')
+        url2 = data1["props"]["pageProps"]["seo"]["canonical"]
 
         req = requests.get(url2)
         soup2 = BeautifulSoup(req.text, 'html.parser')
@@ -263,6 +276,11 @@ class Match:
         data2 = None
         if tag_data2:
             text2 = tag_data2.contents[0]
+
+            # with open("temp1.json", "w") as w_file:
+            #     temptext = json.dumps(json.loads(text2), indent=4)
+            #     w_file.write(temptext)
+
             if text2:
                 data2 = json.loads(text2)["props"]["pageProps"]["data"]["pageData"]["content"].get("scorecard")
 
@@ -286,11 +304,18 @@ class Match:
                     bowl_dict[bowler_id] = {'economyRate': bowl.get('economy'), 'maidens': bowl.get('maidens'),
                                             'wickets': bowl.get('wickets'), 'overs': bowl.get('overs')}
 
-                return bat_dict, bowl_dict
             else:
-                return "Score card NA"
+
+                bat_dict = []
+                bowl_dict = []
+                print("ScoreCard NA at CricInfo")
+
         else:
-            return "Score card NA"
+            bat_dict = []
+            bowl_dict = []
+            print("ScoreCard NA at CricInfo")
+
+        return bat_dict, bowl_dict
 
 
 '''
@@ -298,12 +323,13 @@ if __name__ == "__main__":
     se = Series()
     print(se.all_series)
 
-    s = Series(19925)
+    s = Series(1243364)
     print(s.name)
     print(s.matches)
     print(s.players)
 
-    m = Match(1233971)
+
+    m = Match(1243388)
     print(m.description)
     print(m.status)
     print(m.series_id)
@@ -311,4 +337,6 @@ if __name__ == "__main__":
     print(m.series_name)
     print(m.title)
     print(m.squads)
-    print(m.score) '''
+    print(m.score)
+'''
+

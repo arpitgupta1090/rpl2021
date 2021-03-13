@@ -18,6 +18,7 @@ def getProfile(username):
 
 	matches = getSeries(sid, 'all')
 
+
 	for match in matches:
 		match_id_list.append(match[0])
 		match_desc_list.append(match[1])
@@ -63,7 +64,6 @@ def getUser(username, sid):
 	all_rec = Selected.objects.filter(seriesId=sid).values('userName').annotate(points=Sum('point')).order_by('-points')
 	sort_list = sorted(all_rec, key=lambda i: i['points'], reverse=True)
 
-	# photo_set = []
 	photo = ""
 
 	if sort_list:
@@ -76,6 +76,7 @@ def getUser(username, sid):
 		rank += 1
 		if user.get('userName') == name:
 			break
+
 	dict1['name'] = name
 	dict1['image'] = encoded
 	dict1['series'] = series
@@ -86,6 +87,7 @@ def getUser(username, sid):
 	dict1['rank'] = rank
 	dict1['userset'] = user_set
 	dict2['leaddata'] = sort_list[:no_of_leaders]
+
 	return dict1, dict2
 	
 
@@ -126,4 +128,5 @@ def getWin(match_id_list, match_desc_list, counter=None):
 			lst.append({'winname': username, 'photoname': photo, 'winmatch': match_desc, 'winscore': score})
 
 	sort_list = natsorted(lst, key=lambda i: i.get('winmatch'), reverse=True)[:counter]
+
 	return {'windata': sort_list}

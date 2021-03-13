@@ -55,7 +55,7 @@ class ScoreForm(forms.Form):
 	def __init__(self, *args, **kwargs):
 		sid = Envariable().sid
 		super(ScoreForm, self).__init__(*args, **kwargs)
-		self.fields['matchid'].choices = getSeries(sid, 'all')
+		self.fields['matchid'].choices = getSeries(sid, 'past')
 	
 	matchid = forms.ChoiceField(label='Select match')
 	

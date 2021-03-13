@@ -430,7 +430,6 @@ def forgotPassword(request):
 			otp_recv = request.POST['otp']
 			pwd_recv = request.POST['new_password']
 			user_recv = request.POST['UserName']
-			print(user_recv)
 			pwd_conf = request.POST['confirm_password']
 			if not otp_recv:
 				try:
