@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import RplUsers, PlayerList, Selected, parmtable
+from .models import RplUsers, PlayerList, Selected, parmtable, Otptabl
 
-# Register your models here.
 
 admin.site.register(RplUsers)
 admin.site.register(PlayerList)
 admin.site.register(Selected)
 admin.site.register(parmtable)
+admin.site.register(Otptabl)

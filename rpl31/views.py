@@ -432,32 +432,39 @@ def forgotPassword(request):
 			user_recv = request.POST['UserName']
 			pwd_conf = request.POST['confirm_password']
 			if not otp_recv:
-				try:
-					otprec = Otptabl.objects.get(UserName=user_recv)
-					otprec.Otp = otp_pwd
-					otprec.save()
-				except Exception as e:
-					print(str(e))
-					Otptabl(UserName=user_recv, Otp=otp_pwd).save()
-				
+
 				try:
 					user = RplUsers.objects.get(UserName=user_recv)
+					print("User name exists")
 					otpmail(user.emailId, otp_pwd)
+					Otptabl(UserName=user_recv, Otp=otp_pwd).save()
 					messages.info(
 						request, 'Otp has been sent to your Email. '
 						'Please enter received otp with all the other details then click on submit')
 
 				except Exception as e:
+					print("User name does not exist. Trying with mail id")
 					print(str(e))
 
 					try:
+						RplUsers.objects.get(emailId=user_recv)
+						print("Email id exists")
 						otpmail(user_recv, otp_pwd)
+
+						try:
+							Otptabl(UserName=user_recv, Otp=otp_pwd).save()
+						except Exception as e:
+							print(str(e))
+
+							Otptabl.objects.filter(UserName=user_recv).update(Otp=otp_pwd)
+
 						messages.info(
 								request, 'Otp has been sent to your Email. '
 								'Please enter received otp with all the other details then click on submit')
 
 					except Exception as e:
 						print(str(e))
+						print("email id does not exist")
 						messages.info(request, 'User does not exist')
 				return render(request, 'otp.html', {'form': form})
 
@@ -465,8 +472,7 @@ def forgotPassword(request):
 				try:
 					user = RplUsers.objects.filter(UserName=user_recv) | RplUsers.objects.filter(emailId=user_recv)
 					if pwd_recv == pwd_conf:
-						# otprec = Otptabl.objects.get(UserName=user_recv, Otp=otp_recv)
-						
+
 						enc_pwd = make_password(pwd_recv)
 						user.update(pwd=enc_pwd)
 						messages.info(request, 'Password changed')

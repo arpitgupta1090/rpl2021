@@ -96,6 +96,6 @@ class PassForm(forms.ModelForm):
 class OtpForm(forms.Form):
 
 	UserName = forms.CharField(label="Email or User name")
+	otp = forms.DecimalField(required=False, widget=forms.Textarea(attrs={'cols': 6, 'rows': 1}))
 	new_password = forms.CharField(widget=forms.PasswordInput(), required=False)
 	confirm_password = forms.CharField(widget=forms.PasswordInput(), required=False)
-	otp = forms.DecimalField(required=False, widget=forms.Textarea(attrs={'cols': 6, 'rows': 1}))
