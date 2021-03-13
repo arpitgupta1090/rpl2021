@@ -437,7 +437,13 @@ def forgotPassword(request):
 					user = RplUsers.objects.get(UserName=user_recv)
 					print("User name exists")
 					otpmail(user.emailId, otp_pwd)
-					Otptabl(UserName=user_recv, Otp=otp_pwd).save()
+
+					try:
+						Otptabl(UserName=user_recv, Otp=otp_pwd).save()
+					except Exception as e:
+						print(str(e))
+						Otptabl.objects.filter(UserName=user_recv).update(Otp=otp_pwd)
+
 					messages.info(
 						request, 'Otp has been sent to your Email. '
 						'Please enter received otp with all the other details then click on submit')
