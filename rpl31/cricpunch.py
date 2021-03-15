@@ -318,6 +318,38 @@ class Match:
         return bat_dict, bowl_dict
 
 
+class MatchState:
+
+    def __init__(self, match_id):
+        self.match_id = match_id
+        self._json_url = "https://www.espncricinfo.com/matches/engine/match/{0}.json".format(str(match_id))
+        self._json = self._get_json()
+
+        if self._json:
+            self.status = self._status()
+            self.description = self._description()
+
+    def __str__(self):
+        return self.match_id
+
+    def _get_json(self):
+        r = requests.get(self._json_url)
+        if r.status_code == 404:
+            print("MatchNotFoundError")
+        elif 'Scorecard not yet available' in r.text:
+            print("NoScorecardError")
+        else:
+            return r.json()
+
+    def _match_json(self):
+        return self._json['match']
+
+    def _status(self):
+        return self._match_json()['match_status']
+
+    def _description(self):
+        return self._json['description']
+
 '''
 if __name__ == "__main__":
     se = Series()

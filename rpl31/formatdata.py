@@ -1,8 +1,9 @@
 from .cricpunch import Series
-from .cricpunch import Match
+from .cricpunch import Match, MatchState
 from .config import Envariable
 from .models import PlayerList, Selected
 from .functions import setScore, getPlayerName
+import datetime
 
 
 def getSeries(sid, i_parm=None):
@@ -118,20 +119,34 @@ def create_team(dict1, lst):
 
 def getLiveMatch(match_id_list):
 
+    print("time1")
+    print(datetime.datetime.now())
     select1status = Envariable().select1status
     team_list = []
 
+    print("time2")
+    print(datetime.datetime.now())
+
     for mid in match_id_list:
-        m = Match(mid['match_id'])
+        m = MatchState(mid['match_id'])
         match_name = m.description
         match_status = m.status
+
+
+        print("time3")
+        print(datetime.datetime.now())
 
         # if mstatus == 'dormant'  or mstatus == 'forthcoming' or mstatus == 'complete':
         if match_status in select1status:
             # team = m.squads
+            m = Match(mid['match_id'])
             team = sorted(m.squads, key=lambda i: i['player_name'])
+            print("time4")
+            print(datetime.datetime.now())
             for player in team:
                 team_list.append((player.get("player_id"), player.get("player_name")))
+            print("time5")
+            print(datetime.datetime.now())
             break
         else:
             match_name = 'No live match'
