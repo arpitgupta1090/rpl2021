@@ -157,6 +157,8 @@ class Series:
 
 class Match:
 
+    na_text = "Data not available at the source"
+
     def __init__(self, match_id):
         self.match_id = match_id
         self._match_url = "https://www.espncricinfo.com/matches/engine/match/{0}.html".format(str(match_id))
@@ -173,13 +175,14 @@ class Match:
             self.score = self._match_score()
             self.title = self._match_title()
         else:
-            self.status = "DATA NA"
-            self.description = "DATA NA"
-            self.series = "DATA NA"
-            self.series_name = "DATA NA"
-            self.series_id = "DATA NA"
-            self.squads = "DATA NA"
-            self.score = "DATA NA"
+            self.status = self.na_text
+            self.description = self.na_text
+            self.series = self.na_text
+            self.series_name = self.na_text
+            self.series_id = self.na_text
+            self.squads = self.na_text
+            self.score = self.na_text
+            self.title = self.na_text
 
     def __str__(self):
         return self.match_id
@@ -308,66 +311,26 @@ class Match:
 
                 bat_dict = []
                 bowl_dict = []
-                print("ScoreCard NA at CricInfo")
+                print("ScoreCard NA at source")
 
         else:
             bat_dict = []
             bowl_dict = []
-            print("ScoreCard NA at CricInfo")
+            print("ScoreCard NA at source")
 
         return bat_dict, bowl_dict
 
 
-class MatchState:
-
-    def __init__(self, match_id):
-        self.match_id = match_id
-        self._json_url = "https://www.espncricinfo.com/matches/engine/match/{0}.json".format(str(match_id))
-        self._json = self._get_json()
-
-        if self._json:
-            self.status = self._status()
-            self.description = self._description()
-        else:
-            self.status = 'Match Not available'
-            self.description = 'Match Not available'
-
-    def __str__(self):
-        return self.match_id
-
-    def _get_json(self):
-        r = requests.get(self._json_url)
-
-        print(r.status_code)
-
-        if r.status_code == 404:
-            print("MatchNotFoundError")
-        elif 'Scorecard not yet available' in r.text:
-            print("NoScorecardError")
-        else:
-            return r.json()
-
-    def _match_json(self):
-        return self._json['match']
-
-    def _status(self):
-        return self._match_json()['match_status']
-
-    def _description(self):
-        return self._json['description']
-
-'''
-if __name__ == "__main__":
+def main():
     se = Series()
     print(se.all_series)
 
-    s = Series(1243364)
+    s = Series(1249214)
     print(s.name)
     print(s.matches)
     print(s.players)
 
-
-    m = Match(1243388)
+    m = Match(1254058)
     print(m.description)
     print(m.status)
     print(m.series_id)
@@ -376,5 +339,7 @@ if __name__ == "__main__":
     print(m.title)
     print(m.squads)
     print(m.score)
-'''
 
+
+if __name__ == "__main__":
+    main()
