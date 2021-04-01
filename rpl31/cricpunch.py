@@ -328,12 +328,18 @@ class MatchState:
         if self._json:
             self.status = self._status()
             self.description = self._description()
+        else:
+            self.status = 'Match Not available'
+            self.description = 'Match Not available'
 
     def __str__(self):
         return self.match_id
 
     def _get_json(self):
         r = requests.get(self._json_url)
+
+        print(r.status_code)
+
         if r.status_code == 404:
             print("MatchNotFoundError")
         elif 'Scorecard not yet available' in r.text:

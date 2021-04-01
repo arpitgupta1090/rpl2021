@@ -111,7 +111,8 @@ def updateTeam(request):
 	result = parmtable.objects.get(parm_id='P005')
 	team_fullname_list = result.parm_key.split('|')
 	team_name_list = result.parm_data.split('|')
-	res = update_team(sid, team_fullname_list, team_name_list)
+	# res = update_team(sid, team_fullname_list, team_name_list)
+	res = update_team(sid, team_name_list, team_fullname_list)
 	return HttpResponse(res)
 
 
