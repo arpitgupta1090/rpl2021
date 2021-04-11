@@ -25,6 +25,7 @@ class Series:
                 self._fix_url = self._fix_url()
                 self.matches = self._get_matches()
                 self.players = self._get_players()
+
             else:
                 self.name = "DATA NA"
                 self.matches = "DATA NA"
@@ -74,6 +75,7 @@ class Series:
             text = soup.body.get_text()
             text1 = json.loads(text)['events']
             for event in text1:
+
                 mid = event['competitions'][0]['id']
                 match_desc = event['competitions'][0]['description']
                 match_status = event['competitions'][0]["status"]["type"]["description"]
@@ -174,6 +176,9 @@ class Match:
             self.squads = self._squads()
             self.score = self._match_score()
             self.title = self._match_title()
+            if not self.score:
+                self.score = self._espn()
+
         else:
             self.status = self.na_text
             self.description = self.na_text
@@ -260,6 +265,65 @@ class Match:
 
         return lst2
 
+    def _espn(self):
+        url1 = "https://www.espn.in/cricket/series/{0}/game/{1}/".format(self.series_id, self.match_id)
+        r = requests.get(url1)
+        soup = BeautifulSoup(r.text, 'html.parser')
+        tag_data = soup.find('script', text=re.compile('__INITIAL_STATE__'))
+        if tag_data:
+            text = tag_data.contents[0].splitlines()[2].split("=", 1)[1][:-1]
+            if text:
+                text1 = json.loads(text)["gamePackage"]["scorecard"]["innings"]
+                innings_1_batsmen = text1.get("1").get("batsmen")
+                innings_2_batsmen = text1.get("2").get("batsmen")
+                innings_1_bowlers = text1.get("1").get("bowlers")
+                innings_2_bowlers = text1.get("2").get("bowlers")
+
+                batsmen = innings_1_batsmen + innings_2_batsmen
+                bowlers = innings_1_bowlers + innings_2_bowlers
+
+                bat_dict = dict()
+                for batsman in batsmen:
+                    player_id = int(batsman.get("href").split(".")[-2].split("/")[-1])
+                    stats = batsman.get("stats")
+
+                    dict2 = dict()
+                    for data in stats:
+                        if data.get("name") == "runs":
+                            dict2["runs"] = int(data.get("value"))
+                        if data.get("name") == "fours":
+                            dict2["fours"] = int(data.get("value"))
+                        if data.get("name") == "sixes":
+                            dict2["sixes"] = int(data.get("value"))
+                    bat_dict[player_id] = dict2
+
+                bowl_dict = dict()
+                for bowler in bowlers:
+                    player_id = int(bowler.get("href").split(".")[-2].split("/")[-1])
+                    stats = bowler.get("stats")
+
+                    dict2 = dict()
+                    for data in stats:
+                        if data.get("name") == "economyRate":
+                            dict2["economyRate"] = float(data.get("value"))
+                        if data.get("name") == "maidens":
+                            dict2["maidens"] = int(data.get("value"))
+                        if data.get("name") == "wickets":
+                            dict2["wickets"] = int(data.get("value"))
+                        if data.get("name") == "overs":
+                            dict2["overs"] = float(data.get("value"))
+                    bowl_dict[player_id] = dict2
+
+            else:
+                bat_dict = []
+                bowl_dict = []
+
+        else:
+            bat_dict = []
+            bowl_dict = []
+
+        return bat_dict, bowl_dict
+
     def _match_score(self):
         bat_list = []
         bowl_list = []
@@ -322,6 +386,7 @@ class Match:
 
 
 def main():
+
     se = Series()
     print(se.all_series)
 
@@ -330,7 +395,7 @@ def main():
     print(s.matches)
     print(s.players)
 
-    m = Match(1254058)
+    m = Match(1254059)
     print(m.description)
     print(m.status)
     print(m.series_id)
@@ -339,6 +404,7 @@ def main():
     print(m.title)
     print(m.squads)
     print(m.score)
+    # print(m.espn)
 
 
 if __name__ == "__main__":
