@@ -176,8 +176,9 @@ class Match:
             self.squads = self._squads()
             self.score = self._match_score()
             self.title = self._match_title()
-            if not self.score:
-                self.score = self._espn()
+            self.espn = self._espn()
+            if not self.score[0]:
+                self.score = self.espn
 
         else:
             self.status = self.na_text
@@ -274,10 +275,20 @@ class Match:
             text = tag_data.contents[0].splitlines()[2].split("=", 1)[1][:-1]
             if text:
                 text1 = json.loads(text)["gamePackage"]["scorecard"]["innings"]
-                innings_1_batsmen = text1.get("1").get("batsmen")
-                innings_2_batsmen = text1.get("2").get("batsmen")
-                innings_1_bowlers = text1.get("1").get("bowlers")
-                innings_2_bowlers = text1.get("2").get("bowlers")
+
+                if text1.get("1"):
+                    innings_1_batsmen = text1.get("1").get("batsmen")
+                    innings_1_bowlers = text1.get("1").get("bowlers")
+                else:
+                    innings_1_batsmen = []
+                    innings_1_bowlers = []
+
+                if text1.get("2"):
+                    innings_2_batsmen = text1.get("2").get("batsmen")
+                    innings_2_bowlers = text1.get("2").get("bowlers")
+                else:
+                    innings_2_batsmen = []
+                    innings_2_bowlers = []
 
                 batsmen = innings_1_batsmen + innings_2_batsmen
                 bowlers = innings_1_bowlers + innings_2_bowlers
@@ -395,7 +406,7 @@ def main():
     print(s.matches)
     print(s.players)
 
-    m = Match(1254059)
+    m = Match(1254060)
     print(m.description)
     print(m.status)
     print(m.series_id)
@@ -404,7 +415,7 @@ def main():
     print(m.title)
     print(m.squads)
     print(m.score)
-    #  print(m.espn)
+    print(m.espn)
 
 
 if __name__ == "__main__":
