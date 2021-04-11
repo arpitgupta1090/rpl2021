@@ -10,6 +10,7 @@ from .models import RplUsers, Selected, Otptabl, parmtable
 from .profile import getSelect, getWin, getProfile
 from .config import Envariable
 from .formatdata import getSeries, getMatch
+import time
 
 
 import random
@@ -264,13 +265,17 @@ def selectPlayerOffline(request):
 
 @csrf_exempt 
 def scorecard(request):
-	
+
 	if request.method == 'POST':
 		if 'username' in request.session:
 			form = ScoreForm(request.POST)
 			if form.is_valid():
 				match_id = request.POST['matchid']
+				start = time.time()
 				table_data = getMatch(match_id, 'score')
+				stop = time.time()
+				print("total time taken")
+				print(stop - start)
 				return render(request, 'scorecard.html', {'data': table_data, 'form': form})
 		else:
 			messages.info(request, 'Invalid Session')

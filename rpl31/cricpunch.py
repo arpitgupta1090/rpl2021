@@ -178,7 +178,7 @@ class Match:
             self.title = self._match_title()
             self.espn = self._espn()
             if not self.score[0]:
-                self.score = self.espn
+                self.score = self._espn()
 
         else:
             self.status = self.na_text
@@ -415,7 +415,7 @@ def main():
     print(m.title)
     print(m.squads)
     print(m.score)
-    print(m.espn)
+    #print(m.espn)
 
 
 if __name__ == "__main__":
