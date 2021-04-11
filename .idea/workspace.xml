@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b42960d0-33e3-4214-8894-efcbf94eaaf0" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rpl2021/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/rpl2021/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rpl31/cricpunch.py" beforeDir="false" afterPath="$PROJECT_DIR$/rpl31/cricpunch.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -98,8 +95,8 @@
         <entry file="file://$PROJECT_DIR$/rpl31/cricpunch.py">
           <provider selected="true" editor-type-id="live-pycharm">
             <state>
-              <first_editor relative-caret-position="152">
-                <caret line="408" lean-forward="true" selection-start-line="408" selection-end-line="408" />
+              <first_editor relative-caret-position="118">
+                <caret line="406" column="7" selection-start-line="406" selection-start-column="7" selection-end-line="406" selection-end-column="7" />
                 <folding>
                   <element signature="e#0#15#0" expanded="true" />
                 </folding>
@@ -120,7 +117,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>selectplayer2</find>
       <find>get_players</find>
       <find>has_key</find>
       <find>matchscore2</find>
@@ -150,6 +146,7 @@
       <find>print</find>
       <find>getPlayersOffline</find>
       <find>getLiveMatch</find>
+      <find>lxml</find>
     </findStrings>
     <replaceStrings>
       <replace>selectPlayersLive</replace>
@@ -298,6 +295,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -464,8 +462,8 @@
     <entry file="file://$PROJECT_DIR$/rpl31/cricpunch.py">
       <provider selected="true" editor-type-id="live-pycharm">
         <state>
-          <first_editor relative-caret-position="152">
-            <caret line="408" lean-forward="true" selection-start-line="408" selection-end-line="408" />
+          <first_editor relative-caret-position="118">
+            <caret line="406" column="7" selection-start-line="406" selection-start-column="7" selection-end-line="406" selection-end-column="7" />
             <folding>
               <element signature="e#0#15#0" expanded="true" />
             </folding>
