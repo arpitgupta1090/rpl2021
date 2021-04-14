@@ -335,7 +335,7 @@ class Match:
 
         return bat_dict, bowl_dict
 
-    def _match_score(self):
+    def _match_score(self, debug=None):
         bat_list = []
         bowl_list = []
         bat_dict = {}
@@ -393,6 +393,8 @@ class Match:
             bowl_dict = []
             print("ScoreCard NA at source")
 
+        if debug:
+            exec(debug)
         return bat_dict, bowl_dict
 
 
