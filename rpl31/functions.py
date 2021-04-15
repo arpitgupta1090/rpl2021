@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from django.conf import settings
 from django.core.mail import send_mail
 import traceback
@@ -166,7 +168,7 @@ def setScore(mid, bat_dict, bowl_dict, sid, mname):
 	sbit = Envariable().sbit
 	try:
 		dict1 = {}
-		all_rec = Selected.objects.filter(matchId=mid).filter(seriesId=sid)
+		all_rec = get_selected_players(mid, sid)
 		for rec in all_rec:
 			plist = [rec.player1, rec.player2, rec.player3, rec.player4, rec.player5]
 			score = playerscore(plist, bat_dict, bowl_dict)
@@ -190,6 +192,13 @@ def setScore(mid, bat_dict, bowl_dict, sid, mname):
 		return e
 
 
+@lru_cache(maxsize=None)
+def get_selected_players(mid, sid):
+	all_rec = Selected.objects.filter(matchId=mid).filter(seriesId=sid)
+	return all_rec
+
+
+@lru_cache(maxsize=None)
 def getPlayerName(pid):
 	sid = Envariable().sid
 	try:
