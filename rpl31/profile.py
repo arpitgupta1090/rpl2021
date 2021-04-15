@@ -5,6 +5,7 @@ from natsort import natsorted
 from .config import Envariable
 from .formatdata import getSeries
 from base64 import b64encode
+from functools import lru_cache
 
 
 def getProfile(username):
@@ -15,9 +16,7 @@ def getProfile(username):
 
 	match_id_list = list()
 	match_desc_list = list()
-
 	matches = getSeries(sid, 'all')
-
 
 	for match in matches:
 		match_id_list.append(match[0])
@@ -28,7 +27,6 @@ def getProfile(username):
 	win_dict = getWin(match_id_list, match_desc_list, no_of_win_dict)
 
 	dict1 = {**user_dict, **lead_dict, **select_dict, **win_dict}
-	# print(dict1)
 	return dict1
 	
 
@@ -41,7 +39,8 @@ def getUser(username, sid):
 	dict2 = {}
 	name = username
 
-	series = 'Indian Premier League'
+	# series = 'Indian Premier League'
+	series = getSeries(sid, 'name')
 	user_set = RplUsers.objects.get(UserName=username)
 	encoded = b64encode(user_set.image_data).decode('ascii')
 	
@@ -123,10 +122,18 @@ def getWin(match_id_list, match_desc_list, counter=None):
 			username = all_rec1[0].userName
 			score = all_rec1[0].total
 			match_desc = match_desc_list[match_id_list.index(str(all_rec1[0].matchId))]
-			photo_name = RplUsers.objects.get(UserName=username)
-			photo = b64encode(photo_name.image_data).decode('ascii')
+			# photo_name = RplUsers.objects.get(UserName=username)
+			# photo = b64encode(photo_name.image_data).decode('ascii')
+			photo = get_image(username)
 			lst.append({'winname': username, 'photoname': photo, 'winmatch': match_desc, 'winscore': score})
 
 	sort_list = natsorted(lst, key=lambda i: i.get('winmatch'), reverse=True)[:counter]
 
 	return {'windata': sort_list}
+
+
+@lru_cache
+def get_image(username):
+	photo_name = RplUsers.objects.get(UserName=username)
+	photo = b64encode(photo_name.image_data).decode('ascii')
+	return photo

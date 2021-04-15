@@ -2,6 +2,10 @@ import requests
 import re
 import json
 from bs4 import BeautifulSoup
+import logging
+from rpl31.decorator import set_logger
+
+set_logger()
 
 
 class Series:
@@ -9,6 +13,7 @@ class Series:
     def __init__(self, _series_id=None):
         self._series_url = "https://www.espncricinfo.com/ci/content/match/fixtures_futures.html"
         self._series_id = _series_id
+        na_text = "DATA NA"
 
         if not _series_id:
             self.all_series = self._get_series(self._series_url)
@@ -27,16 +32,16 @@ class Series:
                 self.players = self._get_players()
 
             else:
-                self.name = "DATA NA"
-                self.matches = "DATA NA"
-                self.players = "DATA NA"
+                self.name = na_text
+                self.matches = na_text
+                self.players = na_text
 
     @staticmethod
     def _get_json(_url):
         r = requests.get(_url)
 
         if r.status_code == 404:
-            print("URL not found")
+            logging.error("URL not found")
         else:
             return r.json()
 
@@ -55,7 +60,7 @@ class Series:
                 lst.append(row.a['href'])
 
         else:
-            print("Series data NA")
+            logging.error("Series data NA")
         return lst
 
     def _get_matches(self):
@@ -85,7 +90,7 @@ class Series:
                               "state": match_status, "team1": team1, "team2": team2})
 
         else:
-            print("Match data NA at CrinInfo")
+            logging.error("Match data NA at CrinInfo")
 
         return match
 
@@ -196,9 +201,9 @@ class Match:
     def _get_json(self):
         r = requests.get(self._json_url)
         if r.status_code == 404:
-            print("MatchNotFoundError")
+            logging.error("MatchNotFoundError")
         elif 'Scorecard not yet available' in r.text:
-            print("NoScorecardError")
+            logging.error("NoScorecardError")
         else:
             return r.json()
 
@@ -221,7 +226,7 @@ class Match:
         try:
             return self._json['series'][-1]['series_name']
         except Exception as e:
-            print(str(e))
+            logging.error(str(e))
             return "Series name NA"
 
     def _series_id(self):
@@ -259,10 +264,10 @@ class Match:
 
             else:
                 lst2 = []
-                print("player list NA at CricInfo")
+                logging.error("player list NA at CricInfo")
         else:
             lst2 = []
-            print("player list NA at CricInfo")
+            logging.error("player list NA at CricInfo")
 
         return lst2
 
@@ -386,12 +391,12 @@ class Match:
 
                 bat_dict = []
                 bowl_dict = []
-                print("ScoreCard NA at source")
+                logging.error("ScoreCard NA at source")
 
         else:
             bat_dict = []
             bowl_dict = []
-            print("ScoreCard NA at source")
+            logging.error("ScoreCard NA at source")
 
         if debug:
             exec(debug)
@@ -408,7 +413,7 @@ def main():
     print(s.matches)
     print(s.players)
 
-    m = Match(1254060)
+    m = Match(1254065)
     print(m.description)
     print(m.status)
     print(m.series_id)

@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,14 +27,13 @@ SECRET_KEY = 'gq1g(zzkhwgh16$$4=+ao2!b6ps&yd9ds*fo-1u_g$gu)r%!sm'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','rpl2021.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'rpl2021.herokuapp.com']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-
-	'rpl31.apps.Rpl31Config',
+    'rpl31.apps.Rpl31Config',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,11 +43,11 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-	'whitenoise.middleware.WhiteNoiseMiddleware',
-	'django.middleware.csrf.CsrfViewMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-	'django_session_timeout.middleware.SessionTimeoutMiddleware',
+    'django_session_timeout.middleware.SessionTimeoutMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -60,7 +60,7 @@ ROOT_URLCONF = 'rpl2021.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-		'DIRS': [os.path.join(BASE_DIR,'rpl31/templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'rpl31/templates')],
         'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -84,7 +84,7 @@ in_heroku = False
 if 'DATABASE_URL' in os.environ:
     in_heroku = True
 
-import dj_database_url
+
 if in_heroku:
     DATABASES = {'default': dj_database_url.config()}
 else:
@@ -94,7 +94,6 @@ else:
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
-
 
 
 # Password validation
@@ -136,14 +135,14 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES = [
-	os.path.join(BASE_DIR,'rpl31/static')
-	]
-	
-STATIC_ROOT = os.path.join(BASE_DIR,'static')
+    os.path.join(BASE_DIR, 'rpl31/static')
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'rpl31/static/media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'rpl31/static/media')
 
 
 SESSION_EXPIRE_SECONDS = 1800
@@ -154,5 +153,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'rpl3.0.2020@gmail.com'
-EMAIL_HOST_PASSWORD = '2021@rpl@31'
+EMAIL_HOST_USER = os.environ.get('SMTP_MAIL_ID')
+EMAIL_HOST_PASSWORD = os.environ.get('SMTP_MAIL_PWD')

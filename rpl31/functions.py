@@ -170,8 +170,6 @@ def setScore(mid, bat_dict, bowl_dict, sid, mname):
 		for rec in all_rec:
 			plist = [rec.player1, rec.player2, rec.player3, rec.player4, rec.player5]
 			score = playerscore(plist, bat_dict, bowl_dict)
-			print(plist)
-			# print(bat1score,bat2score,bowl1score,bowl2score,allscore)
 			rec.bat1 = round(score[0], 2)
 			rec.bat2 = round(score[1], 2)
 			rec.bowl1 = round(score[2], 2)
@@ -181,10 +179,9 @@ def setScore(mid, bat_dict, bowl_dict, sid, mname):
 			rec.save()
 			dict1[rec.userName] = rec.total
 		dict2 = ranker2(dict1, sbit, mname)
-		# print(dict2)
+
 		for k, v in dict2.items():
 			point_rec = Selected.objects.get(matchId=mid, userName=k, seriesId=sid)
-			# print(point_rec.userName,k,v)
 			point_rec.point = v
 			point_rec.save()
 		return 'saved'

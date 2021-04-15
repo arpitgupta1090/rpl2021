@@ -3,7 +3,8 @@ from .cricpunch import Match
 from .config import Envariable
 from .models import PlayerList, Selected
 from .functions import setScore, getPlayerName
-from rpl31.decorator import time_taken, logger
+from rpl31.decorator import time_taken, print_return_value
+import logging
 
 
 def getSeries(sid, i_parm=None):
@@ -38,7 +39,7 @@ def getMatch(mid, i_parm=None):
         return getScore(mid, m.score, m.title)
 
 
-@logger
+@print_return_value
 @time_taken
 def setPlayers(player_list, sid):
     for team in player_list:
@@ -59,7 +60,7 @@ def setPlayers(player_list, sid):
     return "player loaded in DB"
 
 
-@logger
+@print_return_value
 @time_taken
 def getPlayersOffline(matches):
 
@@ -95,7 +96,7 @@ def getPlayersOffline(matches):
     return lst, dct
 
 
-@logger
+@print_return_value
 @time_taken
 def get_player_list(team_name):
 
@@ -109,7 +110,7 @@ def get_player_list(team_name):
     return lst
 
 
-@logger
+@print_return_value
 @time_taken
 def create_team(dict1, lst):
 
@@ -125,7 +126,7 @@ def create_team(dict1, lst):
     return print_var
 
 
-@logger
+@print_return_value
 @time_taken
 def getLiveMatch(match_id_list):
 
@@ -153,8 +154,8 @@ def getLiveMatch(match_id_list):
     return match['match_id'], match_name, team_list
 
 
+@print_return_value
 @time_taken
-@logger
 def getScore(mid, score, name):
 
     sid = Envariable().sid
@@ -182,12 +183,12 @@ def getScore(mid, score, name):
         return sort_list
 
     except Exception as e:
-        print(str(e))
+        logging.error(str(e))
         return sort_list
 
 
+@print_return_value
 @time_taken
-@logger
 def getAllMatch(matches, i_parm):
 
     score_status = Envariable().scorestatus

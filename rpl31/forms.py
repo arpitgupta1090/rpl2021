@@ -4,25 +4,9 @@ from .config import Envariable
 from .formatdata import getSeries
 
 '''
-#fetching parameters from parm_table
-#parmdata = getparm()
-#sid = parmdata.get('sid')
-#sid = '19495'
-
-#plist, dict = liveteam(sid)
-#matchid = dict.get('matchid')
-#matchdesc = dict.get('match_desc')
-
-#if len(plist) == 0:
-#	matchdesc = 'No upcoming matches'
-#else:
-#	matchdesc = dict.get('match_desc')
-
 #plist = [('a','b'),('c','d'),('e','f')]
 #matchid = 123
 #matchdesc = 'Temp match'
-
-
 #mlist = [(1,'b'),(2,'d'),(3,'f')]'''
 
 

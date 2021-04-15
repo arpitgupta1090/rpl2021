@@ -110,7 +110,6 @@ def updateTeam(request):
 	result = parmtable.objects.get(parm_id='P005')
 	team_fullname_list = result.parm_key.split('|')
 	team_name_list = result.parm_data.split('|')
-	# res = update_team(sid, team_fullname_list, team_name_list)
 	res = update_team(sid, team_name_list, team_fullname_list)
 	return HttpResponse(res)
 
@@ -184,7 +183,6 @@ def selectPlayersLive(request):
 				return redirect('selectPlayersLive')
 	
 	else:
-		# if request.session.has_key('username'):
 		if 'username' in request.session:
 			form = SelectForm()
 			return render(request, 'selectPlayersLive.html', {'form': form})
@@ -450,12 +448,10 @@ def forgotPassword(request):
 						'Please enter received otp with all the other details then click on submit')
 
 				except Exception as e:
-					print("User name does not exist. Trying with mail id")
 					print(str(e))
 
 					try:
 						RplUsers.objects.get(emailId=user_recv)
-						print("Email id exists")
 						otpmail(user_recv, otp_pwd)
 
 						try:
@@ -471,7 +467,6 @@ def forgotPassword(request):
 
 					except Exception as e:
 						print(str(e))
-						print("email id does not exist")
 						messages.info(request, 'User does not exist')
 				return render(request, 'otp.html', {'form': form})
 
