@@ -132,7 +132,7 @@ def getWin(match_id_list, match_desc_list, counter=None):
 	return {'windata': sort_list}
 
 
-@lru_cache
+@lru_cache(maxsize=None)
 def get_image(username):
 	photo_name = RplUsers.objects.get(UserName=username)
 	photo = b64encode(photo_name.image_data).decode('ascii')

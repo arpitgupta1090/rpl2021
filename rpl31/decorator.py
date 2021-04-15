@@ -6,8 +6,10 @@ import os
 
 def set_logger():
     logging_mode = os.environ.get('LOGGER_MODE')
+    # logging_mode = 'ERROR'
     logging_level = getattr(logging, logging_mode)
-    logging.basicConfig(level=logging_level, format="%(asctime)s:%(levelname)s:%(message)s")
+    logging.basicConfig(level=logging_level, format="%(asctime)s:%(levelname)s:%(message)s [%(filename)s:%("
+                                                    "lineno)s - %(funcName)s()]")
 
 
 def time_taken(func):
@@ -16,13 +18,13 @@ def time_taken(func):
 
     def wrapper(*args, **kwargs):
         now = datetime.now(time_ist).strftime('%Y:%m:%d %H:%M:%S %Z %z')
-        logging.info(f"Started {func.__name__} at {now}")
+        logging.warning(f"Started {func.__name__} at {now}")
         start = datetime.now()
         val = func(*args, **kwargs)
         now = datetime.now(time_ist).strftime('%Y:%m:%d %H:%M:%S %Z %z')
-        logging.info(f"Ended {func.__name__} at {now}")
+        logging.warning(f"Ended {func.__name__} at {now}")
         stop = datetime.now()
-        logging.info(f"total time taken for {func.__name__} at {stop - start}")
+        logging.warning(f"total time taken for {func.__name__} at {stop - start}")
         return val
 
     return wrapper
@@ -41,6 +43,7 @@ def print_return_value(func):
                 my_value = eval(name)
                 logging.info(f"{name} {type(my_value)} = {my_value}")
         return val
+
     return wrapper
 
 
@@ -55,6 +58,7 @@ def print_all_variables(func):
     def wrapper(*args):
         val = func(*args, debug=function_string)
         return val
+
     return wrapper
 
 
@@ -62,6 +66,9 @@ if __name__ == "__main__":
 
     set_logger()
 
+
+    @time_taken
+    @print_return_value
     def test(st, debug=None):
         val1 = "arpit"
         logging.error(f" doing something {st}{val1}")
@@ -69,5 +76,6 @@ if __name__ == "__main__":
         if debug:
             exec(debug)
         return st
+
 
     test('hi')
