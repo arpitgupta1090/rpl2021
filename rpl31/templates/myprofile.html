@@ -38,7 +38,7 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     
     <a href="updateprofile" target="_blank" class="w3-bar-item w3-button w3-padding"><i class="fa fa-edit fa-fw"></i> Update profile</a>
     <a href="changepassowrd" target="_blank" class="w3-bar-item w3-button w3-padding"><i class="fa fa-lock fa-fw"></i>  Change password</a>
-    <a href="uploadphoto" target="_blank" class="w3-bar-item w3-button w3-padding"><i class="fa fa-photo fa-fw"></i>  Upload photo</a-->
+    <a href="uploadphoto" target="_blank" class="w3-bar-item w3-button w3-padding"><i class="fa fa-photo fa-fw"></i>  Upload photo</a>
     <a href="logout" class="w3-bar-item w3-button w3-padding"><i class="fa fa-sign-out fa-fw"></i>  Logout</a>
 	<br><br>
   </div>
@@ -59,12 +59,12 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
   <div class="w3-row-padding w3-margin-bottom">
     <div class="w3-quarter">
       <div class="w3-container w3-red w3-padding-16">
-        <div class="w3-left"><i class="fa fa-thumbs-o-up w3-xxxlarge"></i></div>
+        <div class="w3-left"><i class="fa fa-trophy w3-xxxlarge"></i></div>
         <div class="w3-right">
-          <h3>{{score}}</h3>
+          <h3>{{rank}}</h3>
         </div>
         <div class="w3-clear"></div>
-        <h4>Score</h4>
+        <h4>Rank</h4>
       </div>
     </div>
     <div class="w3-quarter">
@@ -89,12 +89,13 @@ html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     </div>
     <div class="w3-quarter">
       <div class="w3-container w3-dark-grey w3-text-white w3-padding-16">
-        <div class="w3-left"><i class="fa fa-trophy w3-xxxlarge"></i></div>
+        <div class="w3-left"><i class="fa fa-thumbs-o-up w3-xxxlarge"></i></div>
         <div class="w3-right">
-          <h3>{{rank}}</h3>
+          <h3>{{score}}</h3>
         </div>
         <div class="w3-clear"></div>
-        <h4>Rank</h4>
+        <h4 style="margin-bottom: 0px;margin-top: 0px;">Avg. Score</h4>
+        <span>per match</span>
       </div>
     </div>
   </div>

@@ -203,6 +203,8 @@ def getAllMatch(matches, i_parm):
                 # or i.get('state') == 'Scheduled':
                 match_list.append(i.get('match_desc'))
                 match_id_list.append(i.get('match_id'))
+        match_list.reverse()
+        match_id_list.reverse()
 
     if i_parm == 'all':
         for i in matches:
