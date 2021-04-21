@@ -1,11 +1,12 @@
 from .models import Selected, RplUsers
 from .functions import getPlayerName
-from django.db.models import Max, Sum, Count
+from django.db.models import Max, Sum
 from natsort import natsorted
 from .config import Envariable
 from .formatdata import getSeries
 from base64 import b64encode
 from functools import lru_cache
+import concurrent.futures as ConF
 
 
 def getProfile(username):
@@ -112,25 +113,32 @@ def getSelect(username, match_id_list, match_desc_list, counter=None):
 
 def getWin(match_id_list, match_desc_list, counter=None):
     sid = Envariable().sid
-    lst = []
+    lst_winner_data = list()
 
     all_rec = Selected.objects.filter(seriesId=sid).values('matchId').annotate(points=Max('point')).order_by('-points')
 
-    for rec in all_rec:
-        if rec.get('points') > 0:
-            all_rec1 = Selected.objects.filter(seriesId=sid).filter(matchId=rec.get('matchId')).filter(
-                point=rec.get('points'))
-            username = all_rec1[0].userName
-            score = all_rec1[0].total
-            match_desc = match_desc_list[match_id_list.index(str(all_rec1[0].matchId))]
-            # photo_name = RplUsers.objects.get(UserName=username)
-            # photo = b64encode(photo_name.image_data).decode('ascii')
-            photo = get_image(username)
-            lst.append({'winname': username, 'photoname': photo, 'winmatch': match_desc, 'winscore': score})
+    with ConF.ThreadPoolExecutor() as executor:
+        exec_list = [executor.submit(get_winner_data, lst_winner_data, match_desc_list, match_id_list, sid, rec)
+                     for rec in all_rec]
 
-    sort_list = natsorted(lst, key=lambda i: i.get('winmatch'), reverse=True)[:counter]
+    for data in ConF.as_completed(exec_list):
+        print(data.result())
+
+    sort_list = natsorted(lst_winner_data, key=lambda i: i.get('winmatch'), reverse=True)[:counter]
 
     return {'windata': sort_list}
+
+
+def get_winner_data(lst_winner_data, match_desc_list, match_id_list, sid, rec):
+
+    if rec.get('points') > 0:
+        all_rec1 = Selected.objects.filter(seriesId=sid).filter(matchId=rec.get('matchId')).filter(
+            point=rec.get('points'))
+        username = all_rec1[0].userName
+        score = all_rec1[0].total
+        match_desc = match_desc_list[match_id_list.index(str(all_rec1[0].matchId))]
+        photo = get_image(username)
+        lst_winner_data.append({'winname': username, 'photoname': photo, 'winmatch': match_desc, 'winscore': score})
 
 
 @lru_cache(maxsize=None)
