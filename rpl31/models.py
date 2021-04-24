@@ -70,3 +70,22 @@ class Otptabl(models.Model):
 	
 	def __str__(self): 
 		return self.UserName
+
+
+class SelectedPlayers(models.Model):
+
+	userName = models.CharField(max_length=30)
+	seriesId = models.IntegerField(default=0)
+	matchId = models.IntegerField()
+	bat1 = models.CharField(max_length=100)
+	bat2 = models.CharField(max_length=100)
+	bowl1 = models.CharField(max_length=100)
+	bowl2 = models.CharField(max_length=100)
+	allrounder = models.CharField(max_length=100)
+
+	def __str__(self):
+		return self.userName + str(self.matchId)
+
+	class Meta:
+		managed = False
+		db_table = "selected_players"
