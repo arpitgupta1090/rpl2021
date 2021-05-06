@@ -1,16 +1,21 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic import RedirectView
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db import IntegrityError
 from django.contrib.auth.hashers import make_password, check_password
 from django.views.decorators.csrf import csrf_exempt
 from .functions import *
-from .forms import SelectForm, ScoreForm, UploadForm, UpdateForm, PassForm, OtpForm
+from .forms import SelectForm, ScoreForm, UploadForm, UpdateForm, PassForm, OtpForm, SelectModelForm
 from .models import RplUsers, Selected, Otptabl, parmtable
 from .profile import getSelect, getWin, getProfile
 from .config import Envariable
 from .formatdata import getSeries, getMatch
 from .decorator import time_taken
+from rpl31.mixins import UserMixin
 import random
 
 
@@ -119,6 +124,44 @@ def reloadTeam(request):
 	sid = Envariable().sid
 	res = getSeries(sid, 'players')
 	return HttpResponse(res)
+
+
+class SelectRedirectView(UserMixin, RedirectView):
+
+	def get_redirect_url(self):
+		sid = Envariable().sid
+		match_id, match_desc, plist = getSeries(sid, 'live')
+		try:
+			player = Selected.objects.get(userName=self.request.session['username'], matchId=match_id, seriesId=sid)
+			pk = player.id
+			return reverse('update', args=(pk,))
+		except Selected.DoesNotExist:
+			return reverse('add')
+
+
+class SelectPlayer(UserMixin, SuccessMessageMixin, CreateView):
+
+	template_name = 'selectPlayersLive.html'
+	form_class = SelectModelForm
+	model = Selected
+	success_url = 'login'
+	success_message = "Players added successfully"
+
+	def get_initial(self, *args, **kwargs):
+		initial = super(SelectPlayer, self).get_initial(**kwargs)
+		initial['userName'] = self.request.session['username']
+		return initial
+
+
+class UpdatePlayer(UserMixin, SuccessMessageMixin, UpdateView):
+
+	template_name = 'selectPlayersLive.html'
+	form_class = SelectModelForm
+	model = Selected
+	success_message = "Players updated successfully"
+
+	def get_success_url(self):
+		return reverse('login')
 
 
 @csrf_exempt 
