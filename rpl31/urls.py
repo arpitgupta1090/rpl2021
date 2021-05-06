@@ -4,12 +4,9 @@ from django.conf import settings
 from django.conf.urls.static import static 
 
 urlpatterns = [
-	path('', views.login, name='login'),
+	path('', views.home, name='home'),
 	path('home', views.home, name='home'),
-	path('register', views.register, name='register'),
-	path('login', views.login, name='login'),
 	path('logout', views.logout, name='logout'),
-	path('selectplayer1', views.selectPlayersLive, name='selectPlayersLive'),
 	path('selectplayer2', views.selectPlayerOffline, name='selectPlayerOffline'),
 	path('scorecard', views.scorecard, name='scorecard'),
 	path('profile', views.profile, name='profile'),
@@ -24,6 +21,8 @@ urlpatterns = [
 	path('add', views.SelectPlayer.as_view(), name='add'),
 	path('update/<pk>/', views.UpdatePlayer.as_view(), name='update'),
 	path('select', views.SelectRedirectView.as_view(), name='select'),
+	path('register', views.RegisterView.as_view(), name='register'),
+	path('login', views.LoginView.as_view(), name='login'),
 ]
 
 if settings.DEBUG: 

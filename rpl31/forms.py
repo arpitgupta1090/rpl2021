@@ -10,6 +10,47 @@ from rpl31.formatdata import getSeries, getMatch
 #mlist = [(1,'b'),(2,'d'),(3,'f')]'''
 
 
+class RegisterForm(forms.ModelForm):
+    confirm_password = forms.CharField(widget=forms.PasswordInput())
+
+    class Meta:
+        model = RplUsers
+        fields = ['UserName', 'emailId', 'mobile', 'pwd']
+        widgets = {'pwd': forms.PasswordInput(), }
+        labels = {'pwd': 'Password', }
+
+    def clean(self):
+        cleaned_data = super(RegisterForm, self).clean()
+        password = cleaned_data.get("pwd")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        if password != confirm_password and password:
+            raise forms.ValidationError("password and confirm_password does not match")
+        return cleaned_data
+
+
+class LoginForm(forms.ModelForm):
+
+    class Meta:
+        model = RplUsers
+        fields = ['emailId', 'pwd']
+        widgets = {'pwd': forms.PasswordInput(), }
+        labels = {'pwd': 'Password', }
+
+    def clean(self):
+        cleaned_data = super(LoginForm, self).clean()
+        email = cleaned_data.get("emailId")
+        password = cleaned_data.get("pwd")
+
+        user = RplUsers.objects.get(emailId=email)
+        if user.pwd != password:
+            raise forms.ValidationError("Invalid password")
+        if not user.activeflag:
+            raise forms.ValidationError("User is not active, please contact admin")
+
+        return cleaned_data
+
+
 class SelectModelForm(forms.ModelForm):
     matchDesc = forms.CharField(max_length=100, label="Match", disabled=True)
 

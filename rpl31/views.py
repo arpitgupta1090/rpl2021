@@ -2,93 +2,68 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic import RedirectView
+from django.views.generic import RedirectView, View
 from django.contrib import messages
+from django.utils.decorators import method_decorator
 from django.contrib.messages.views import SuccessMessageMixin
-from django.db import IntegrityError
 from django.contrib.auth.hashers import make_password, check_password
 from django.views.decorators.csrf import csrf_exempt
-from .functions import *
-from .forms import SelectForm, ScoreForm, UploadForm, UpdateForm, PassForm, OtpForm, SelectModelForm
-from .models import RplUsers, Selected, Otptabl, parmtable
-from .profile import getSelect, getWin, getProfile
-from .config import Envariable
-from .formatdata import getSeries, getMatch
-from .decorator import time_taken
+from rpl31.functions import *
+from rpl31.forms import ScoreForm, UploadForm, UpdateForm, PassForm, OtpForm, SelectModelForm, RegisterForm, LoginForm
+from rpl31.models import RplUsers, Selected, Otptabl, parmtable
+from rpl31.profile import getSelect, getWin, getProfile
+from rpl31.config import Envariable
+from rpl31.formatdata import getSeries, getMatch
+from rpl31.decorator import time_taken
 from rpl31.mixins import UserMixin
 import random
 
 
 @csrf_exempt
 def home(request):
+	if 'username' in request.session:
+		username = request.session['username']
+		return render(request, 'login.html', {"username": username})
 	sid = Envariable().sid
 	series = getSeries(sid, 'name')
 	return render(request, 'home.html', {'series': series})
 
 
-@csrf_exempt
-def register(request):
+class RegisterView(SuccessMessageMixin, CreateView):
 
-	try:
-
-		if request.method == 'POST':
-			mobile = request.POST['mobile']
-			email = request.POST['email']
-			username = request.POST['username']
-			password = request.POST['psw']
-
-			user = RplUsers(UserName=username, pwd=make_password(password), emailId=email, mobile=mobile)
-			user.save()
-			messages.info(request, 'User Created')
-			
-	except IntegrityError as e:
-		e = str(e)
-		if e == 'UNIQUE constraint failed: rpl31_rplusers.mobile':
-			msg = 'Mobile number already present'
-		elif e == 'UNIQUE constraint failed: rpl31_rplusers.UserName':
-			msg = 'User name already present'
-		elif e == 'UNIQUE constraint failed: rpl31_rplusers.emailId':
-			msg = 'Email Id already present'
-		else:
-			msg = e
-		messages.info(request, msg)
-
-	except Exception as e:
-
-		messages.info(request, str(e))
-		
-	return redirect('home')	
+	template_name = 'baseform.html'
+	form_class = RegisterForm
+	model = Selected
+	success_url = 'home'
+	success_message = "User created. Please contact admin for activation"
 
 
-@csrf_exempt
-def login(request):
-	sid = Envariable().sid
-	if request.method == 'GET':
-		if 'username' in request.session:
-			username = request.session['username']
-			return render(request, 'login.html', {"username": username})
-		else:
+@method_decorator(csrf_exempt, name='post')
+class LoginView(View):
+
+	template_name = 'baseform.html'
+	form_class = LoginForm
+
+	def get(self, request, *args, **kwargs):
+		form = self.form_class()
+		context = {'form': form}
+		return render(request, self.template_name, context)
+
+	def post(self, request, *args, **kwargs):
+		email = request.POST['emailId']
+		try:
+			instance = RplUsers.objects.get(emailId=email)
+		except RplUsers.DoesNotExist:
+			messages.error(request, 'Email id not registered')
 			return redirect('home')
-	else:
-		series = getSeries(sid, 'name')
-		email = request.POST['email']
-		password = request.POST['psw1']
-		
-		user = RplUsers.objects.filter(emailId=email)
-		
-		if user.count() > 0 and check_password(password, user[0].pwd):
-			user_dict = RplUsers.objects.filter(emailId=email).values()
-			username = user_dict[0]['UserName']
-			active_flag = user_dict[0]['activeflag']
-			if active_flag:
-				request.session['username'] = username
-				return render(request, 'login.html', {'username': username, 'series': series})
-			else:
-				messages.info(request, 'User not activated. Please contact admin')
-				return redirect('home')
+
+		form = LoginForm(request.POST, instance=instance)
+
+		if form.is_valid():
+			request.session['username'] = instance.UserName
+			return render(request, 'login.html', {'username': instance.UserName})
 		else:
-			messages.info(request, 'Invalid username/password')
-			return redirect('home')
+			return render(request, self.template_name, {'form': form})
 
 
 @csrf_exempt
@@ -101,13 +76,6 @@ def logout(request):
 	messages.info(request, msg)
 	return redirect('home')
 
-
-'''
-@csrf_exempt  
-def test(request):
-	d = squad2('1198246')
-	return HttpResponse(json.dumps({"lat": d}), content_type="application/json")'''
-	
 
 @csrf_exempt  
 def updateTeam(request):
@@ -163,76 +131,6 @@ class UpdatePlayer(UserMixin, SuccessMessageMixin, UpdateView):
 	def get_success_url(self):
 		return reverse('login')
 
-
-@csrf_exempt 
-def selectPlayersLive(request):
-
-	sid = Envariable().sid
-	select1status = Envariable().select1status
-	if request.method == 'POST':
-		form = SelectForm(request.POST)
-		if form.is_valid():
-			match_id = request.POST['matchid']
-			player1 = request.POST['player1']
-			player2 = request.POST['player2']
-			player3 = request.POST['player3']
-			player4 = request.POST['player4']
-			player5 = request.POST['player5']
-			username = request.session['username']
-
-			status = getMatch(match_id, 'status')
-
-			# if m.status == 'dormant'  or m.status == 'forthcoming':
-			if status in select1status:
-				
-				if player5 == player1 or player5 == player2:
-					messages.info(request, 'Batsman and All-rounder can\'t be same')
-					return redirect('selectPlayersLive')
-
-				elif player1 == player2:
-					messages.info(request, 'Both batsmen can\'t be same')
-					return redirect('selectPlayersLive')
-
-				elif player5 == player3 or player5 == player4:
-					messages.info(request, 'Bowler and All-rounder can\'t be same')
-					return redirect('selectPlayersLive')
-
-				elif player3 == player4:
-					messages.info(request, 'Both Bowlers can\'t be same')
-					return redirect('selectPlayersLive')
-					
-				select_check = Selected.objects.filter(userName=username).filter(matchId=match_id).filter(seriesId=sid)
-				
-				if select_check.count() == 0:
-					player = Selected(
-								userName=username, matchId=match_id, player1=player1, player2=player2,
-								player3=player3, player4=player4, player5=player5, seriesId=sid)
-
-					player.save()
-					messages.info(request, 'Player Successfully Added')
-				else:
-					player = Selected.objects.get(userName=username, matchId=match_id, seriesId=sid)
-					player.player1 = player1
-					player.player2 = player2
-					player.player3 = player3
-					player.player4 = player4
-					player.player5 = player5
-					player.save()
-					messages.info(request, 'Player Successfully updated')
-					
-				return redirect('login')
-			else:
-				messages.info(request, 'Match already started')
-				return redirect('selectPlayersLive')
-	
-	else:
-		if 'username' in request.session:
-			form = SelectForm()
-			return render(request, 'selectPlayersLive.html', {'form': form})
-		else:
-			messages.info(request, 'Invalid Session')
-			return redirect('home')
-				
 
 @csrf_exempt
 def selectPlayerOffline(request):
