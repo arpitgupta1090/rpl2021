@@ -20,7 +20,7 @@ urlpatterns = [
 	path('updateteam', views.updateTeam, name='updateTeam'),
 	path('add', views.SelectPlayer.as_view(), name='add'),
 	path('update/<pk>/', views.UpdatePlayer.as_view(), name='update'),
-	path('select', views.SelectRedirectView.as_view(), name='select'),
+	path('selectplayer1', views.SelectRedirectView.as_view(), name='select'),
 	path('register', views.RegisterView.as_view(), name='register'),
 	path('login', views.LoginView.as_view(), name='login'),
 ]

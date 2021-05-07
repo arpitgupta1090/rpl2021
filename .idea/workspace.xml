@@ -32,12 +32,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b42960d0-33e3-4214-8894-efcbf94eaaf0" name="Default Changelist" comment="RPL3.1.4.13 added SelectedPlayers view">
-      <change afterPath="$PROJECT_DIR$/rpl31/templates/baseform.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rpl31/templates/logging.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rpl31/templates/style.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rpl31/templates/title.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rpl31/decorator.py" beforeDir="false" afterPath="$PROJECT_DIR$/rpl31/decorator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rpl31/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/rpl31/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpl31/profile.py" beforeDir="false" afterPath="$PROJECT_DIR$/rpl31/profile.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpl31/templates/baseform.html" beforeDir="false" afterPath="$PROJECT_DIR$/rpl31/templates/baseform.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rpl31/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/rpl31/templates/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rpl31/templates/register.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpl31/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/rpl31/templates/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpl31/templates/otp.html" beforeDir="false" afterPath="$PROJECT_DIR$/rpl31/templates/otp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rpl31/templates/selectPlayersLive.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/rpl31/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/rpl31/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rpl31/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/rpl31/views.py" afterDir="false" />
     </list>
@@ -51,6 +56,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -66,10 +72,14 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/rpl31/templates" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\pythonProject\rpl2021\rpl31\templates" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\pythonProject\rpl2021\rpl31\templates" />
     </key>
@@ -243,7 +253,14 @@
       <option name="project" value="LOCAL" />
       <updated>1620299174895</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="RPL3.1.4.0 Register and login CBV added">
+      <created>1620323418854</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1620323418855</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -295,7 +312,8 @@
     <MESSAGE value="RPL3.1.3.13 multithreading max worker added" />
     <MESSAGE value="RPL3.1.4.13 added SelectedPlayers view" />
     <MESSAGE value="RPL3.1.3.0 Class Based views added" />
-    <option name="LAST_COMMIT_MESSAGE" value="RPL3.1.3.0 Class Based views added" />
+    <MESSAGE value="RPL3.1.4.0 Register and login CBV added" />
+    <option name="LAST_COMMIT_MESSAGE" value="RPL3.1.4.0 Register and login CBV added" />
   </component>
   <component name="WindowStateProjectService">
     <state x="401" y="147" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1618912210678">

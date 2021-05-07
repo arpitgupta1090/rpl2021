@@ -45,20 +45,15 @@ def getUser(username, sid):
 
     results = Selected.objects.filter(userName=username).filter(seriesId=sid).aggregate(Sum('point'), Sum('total'))
     match_count = Selected.objects.filter(seriesId=sid).exclude(total=0).values('matchId').distinct().count()
-
-    score = results['total__sum'] / match_count
-    point = results['point__sum']
-    print(score)
-
-    if not score:
+    if results['total__sum'] and match_count:
+        score = results['total__sum'] / match_count
+        point = results['point__sum']
+    else:
         score = 0
-    else:
-        score = round(score, 4)
-
-    if not point:
         point = 0
-    else:
-        point = round(point, 4)
+
+    score = round(score, 4)
+    point = round(point, 4)
 
     amount = round((point * base_amount), 2)
 

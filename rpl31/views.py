@@ -37,16 +37,21 @@ class RegisterView(SuccessMessageMixin, CreateView):
 	success_url = 'home'
 	success_message = "User created. Please contact admin for activation"
 
+	def get_context_data(self, **kwargs):
+		context = super(RegisterView, self).get_context_data(**kwargs)
+		context['title'] = "Sign Up"
+		return context
+
 
 @method_decorator(csrf_exempt, name='post')
 class LoginView(View):
 
-	template_name = 'baseform.html'
+	template_name = 'logging.html'
 	form_class = LoginForm
 
 	def get(self, request, *args, **kwargs):
 		form = self.form_class()
-		context = {'form': form}
+		context = {'form': form, 'title': "Login"}
 		return render(request, self.template_name, context)
 
 	def post(self, request, *args, **kwargs):
@@ -63,7 +68,7 @@ class LoginView(View):
 			request.session['username'] = instance.UserName
 			return render(request, 'login.html', {'username': instance.UserName})
 		else:
-			return render(request, self.template_name, {'form': form})
+			return render(request, self.template_name, {'form': form, 'title': "Login"})
 
 
 @csrf_exempt
@@ -109,7 +114,7 @@ class SelectRedirectView(UserMixin, RedirectView):
 
 class SelectPlayer(UserMixin, SuccessMessageMixin, CreateView):
 
-	template_name = 'selectPlayersLive.html'
+	template_name = 'baseform.html'
 	form_class = SelectModelForm
 	model = Selected
 	success_url = 'login'
@@ -123,7 +128,7 @@ class SelectPlayer(UserMixin, SuccessMessageMixin, CreateView):
 
 class UpdatePlayer(UserMixin, SuccessMessageMixin, UpdateView):
 
-	template_name = 'selectPlayersLive.html'
+	template_name = 'baseform.html'
 	form_class = SelectModelForm
 	model = Selected
 	success_message = "Players updated successfully"
@@ -291,12 +296,12 @@ def uploadPhoto(request):
 		else:
 			form = UploadForm()
 			messages.info(request, 'Invalid data entered')
-		return render(request, 'uploadphoto.html', {'form': form})
+		return render(request, 'baseform.html', {'form': form})
 
 	else:
 		if 'username' in request.session:
 			form = UploadForm()
-			return render(request, 'uploadphoto.html', {'form': form})
+			return render(request, 'baseform.html', {'form': form})
 		else:
 			messages.info(request, 'Invalid Session')
 			return redirect('home')
