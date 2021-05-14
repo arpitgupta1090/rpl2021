@@ -112,7 +112,7 @@ def getWin(match_id_list, match_desc_list, counter=None):
 
     all_rec = Selected.objects.filter(seriesId=sid).values('matchId').annotate(points=Max('point')).order_by('-points')
 
-    with ConF.ThreadPoolExecutor(max_workers=10) as executor:
+    with ConF.ProcessPoolExecutor(max_workers=4) as executor:
         exec_list = [executor.submit(get_winner_data, lst_winner_data, match_desc_list, match_id_list, sid, rec)
                      for rec in all_rec]
 
